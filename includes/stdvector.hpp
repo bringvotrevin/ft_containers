@@ -19,24 +19,23 @@ public:
 
     vector()
         noexcept(is_nothrow_default_constructible<allocator_type>::value);
-    explicit vector(const allocator_type&);
-    explicit vector(size_type n);
-    explicit vector(size_type n, const allocator_type&); // C++14
-    vector(size_type n, const value_type& value, const allocator_type& = allocator_type());
-    template <class InputIterator>
-        vector(InputIterator first, InputIterator last, const allocator_type& = allocator_type());
-    vector(const vector& x);
+    // explicit vector(const allocator_type&);
+    // vector(size_type n, const value_type& value, const allocator_type& = allocator_type());
+    // template <class InputIterator>
+    //     vector(InputIterator first, InputIterator last, const allocator_type& = allocator_type());
+    // vector(const vector& x);
     vector(vector&& x)
         noexcept(is_nothrow_move_constructible<allocator_type>::value);
     vector(initializer_list<value_type> il);
-    vector(initializer_list<value_type> il, const allocator_type& a);
+    
+    
     ~vector();
+    
+    
     vector& operator=(const vector& x);
-    vector& operator=(vector&& x)
-        noexcept(
-             allocator_type::propagate_on_container_move_assignment::value ||
-             allocator_type::is_always_equal::value); // C++17
     vector& operator=(initializer_list<value_type> il);
+
+
     template <class InputIterator>
         void assign(InputIterator first, InputIterator last);
     void assign(size_type n, const value_type& u);
