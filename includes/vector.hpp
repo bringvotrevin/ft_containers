@@ -39,6 +39,18 @@ class  vector
 
 };
 
+//ms 24 const vector iterator
+template <class _V>
+class _V_const_iterator // iterator_base 상속받음
+{
+
+};
+
+template <class _V>
+class _V_iterator // const v itorator 상속받음
+{
+
+};
 
 
 
