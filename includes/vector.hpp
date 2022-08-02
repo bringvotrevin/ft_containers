@@ -20,7 +20,7 @@ class  vector
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
 
-		typedef iterator; //
+		typedef vector_iterator								iterator; //
 		typedef const_iterator; //
 		typedef reverse_iterator; //
 		typedef const_reverse_iterator; //
@@ -45,6 +45,14 @@ class  vector
 		vector&		operator=(const vector& x);
 
 		// Iterators:
+		iterator			begin();
+		const_iterator		begin() const;
+		iterator			end();
+		const_iterator		end() const;
+		iterator			rbegin();
+		const_iterator		rbegin() const;
+		iterator			rend();
+		const_iterator		rend() const;
 
 
 		// Capacity :
