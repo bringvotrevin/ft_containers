@@ -35,6 +35,8 @@
         "__split_buffer": "cpp",
         "bitset": "cpp",
         "initializer_list": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "chrono": "cpp",
+        "__string": "cpp"
     }
 }

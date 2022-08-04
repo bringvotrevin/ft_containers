@@ -37,7 +37,7 @@ class  vector
 		};
 		explicit vector(size_type n, const value_type& value, const allocator_type& = allocator_type());
 		template <class InputIterator>
-			vector(InputIterator first, InpusIterator last, const allocator_type& = allocator_type());
+		vector(InputIterator first, InpusIterator last, const allocator_type& = allocator_type());
 		vector(const vector& v);
 		// destructor
 		~vector();
@@ -45,14 +45,14 @@ class  vector
 		vector&		operator=(const vector& x);
 
 		// Iterators:
-		iterator			begin();
-		const_iterator		begin() const;
-		iterator			end();
-		const_iterator		end() const;
-		iterator			rbegin();
-		const_iterator		rbegin() const;
-		iterator			rend();
-		const_iterator		rend() const;
+		iterator		begin();
+		const_iterator	begin() const;
+		iterator		end();
+		const_iterator	end() const;
+		iterator		rbegin();
+		const_iterator	rbegin() const;
+		iterator		rend();
+		const_iterator	rend() const;
 
 
 		// Capacity :
@@ -75,12 +75,25 @@ class  vector
 
 		//	Modifiers
 		template <class InputIterator>
-		void	assign(InputIterator fist, InputIterator last); //range
-		void	assign(size_type n, const value_type& val); //fill
-		// TODO push_back, pop_back, insert, erase, swap, clear, emplace, emplace_back
+		void		assign(InputIterator fist, InputIterator last); //range
+		void		assign(size_type n, const value_type& val); //fill
+		void		push_back(const value_type& val);
+		void		pop_back();
+		iterator	insert(iterator position, const value_type& val); //single element
+		void		insert(iterator position, size_type n, const value_type& val); //fill
+		template <class InputIterator>
+		void		insert(iterator position, InputIterator first, InputIterator last); //range
+		iterator	erase(iterator position);
+		iterator	erase(iterator fist, iterator lase);
+		void		swap(vector& x);
+		void		clear();
+		template <class... Args>
+		iterator	emplace(const_iterator position, Args&&... args);
+		template <class... Args>
+		iterator	emplace_back(Args&&... args);
 
 		//	Allocator
-		// TODO get_allocator
+		allocator_type	get_allocator() const;
 
 
 
