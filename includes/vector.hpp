@@ -8,7 +8,6 @@
 
 namespace ft {
 
-
 template <class _T, class _Alloc = std::allocator<_T> >
 class  vector
 {
@@ -20,7 +19,7 @@ class  vector
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
 
-		typedef vector_iterator								iterator; //
+		typedef vector_iterator								iterator; // TODO iterator
 		typedef const_iterator; //
 		typedef reverse_iterator; //
 		typedef const_reverse_iterator; //

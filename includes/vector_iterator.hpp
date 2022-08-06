@@ -9,10 +9,18 @@ namespace ft {
 
 template <class Category, class T, class Distance = ptrdiff_t,
 			class Pointer = T*, class Reference = T&>
-class vector_iterator
+class vector_iterator : public ft::iterator_traits<Iterator> // REVIEW	iterator<Iterator>
 {
 	public :
-	 //TODO 
+		//TODO vector_iterator
+		typedef typename Category		iterator_category;
+		typedef typename T				value_type;
+		typedef typename Distance		difference_type;
+		typedef typename Pointer		pointer;
+		typedef typename Reference		reference;
+
+		iterator_category random_access_iterator_tag;
+		
 };
 
 }
@@ -40,7 +48,5 @@ class iterator_traits
 		typedef typename Iterator::iterator_category	iterator_category;
 
 };
-
-
 
 #endif
