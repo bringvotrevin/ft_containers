@@ -9,37 +9,54 @@
 
 namespace ft {
 
-template <class _T, class _Alloc = std::allocator<_T> >
+template <class T, class Alloc = std::allocator<_T> >
 class  vector
 {
 	private:
-		typedef _T											value_type;
-		typedef _Alloc										allocator_type;
+		typedef T											value_type;
+		typedef Alloc										allocator_type;
 		typedef typename allocator_type::reference			reference;
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
 
 		typedef ft::vector_iterator<pointer>				iterator;
-		typedef ft::vector_iterator<const_pointer>			const_iterator; 
+		typedef ft::vector_iterator<const_pointer>			const_iterator;
 		typedef reverse_iterator; // TODO reverse iterator
-		typedef const_reverse_iterator; //
+		typedef const_reverse_iterator; // 
 		typedef typename allocator_type::difference_type	difference_type;
 		typedef typename allocator_type::size_type			size_type;
 
-		// Member functions
+		// REVIEW ask jwkim
+		allocator_type	_alloc;
+		pointer			_p; // REVIEW allocator_type::pointer인데 _p[]로 활용?
+		size_type		_size;
+		size_type		_capacity;
 
+		// Member functions
+	public:
 		// constructor
-		explicit vector(const allocator_type& alloc)
-		: _Alloc(alloc), size(0), capacity(1)
+		explicit vector(const allocator_type& alloc = allocator_type())
+		: _alloc(alloc), _p(0), _size(0), _capacity(1)
 		{
-			// TODO vector allocator
-		};
-		explicit vector(size_type n, const value_type& value, const allocator_type& = allocator_type());
+			// TODO check max size & throw
+			_p = _alloc.allocate(capacity);
+		}
+		explicit vector(size_type n, const value_type& value, const allocator_type& alloc = allocator_type())
+		: _alloc(alloc), _p(0), _size(n), _capacity() // REVIEW capacity?
+		{
+			// TODO check max size & throw
+			// TODO allocate and construct
+		}
 		template <class InputIterator>
-		vector(InputIterator first, InpusIterator last, const allocator_type& = allocator_type());
-		vector(const vector& v);
-		
+		vector(InputIterator first, InpusIterator last, const allocator_type& = allocator_type())
+		{
+
+		}
+		vector(const vector& v)
+		{
+
+		}
 		// destructor
 		~vector();
 		
@@ -47,28 +64,59 @@ class  vector
 		vector&		operator=(const vector& x);
 
 		// Iterators:
-		iterator		begin();
-		const_iterator	begin() const;
-		iterator		end();
-		const_iterator	end() const;
-		iterator		rbegin();
-		const_iterator	rbegin() const;
-		iterator		rend();
+		iterator		begin()
+		{
+			return (iterator(&_p[0]));
+		}
+		const_iterator	begin() const
+		{
+			return (const_iterator(&_p[0]));
+		}
+		iterator		end()
+		{
+			return (iterator(&_p[_size]));
+		}
+		const_iterator	end() const
+		{
+			return (const_iterator(&_p[_size]));
+		}
+		iterator		rbegin()
+		{
+			return (iterator(&p[_size - 1]));
+		}
+		const_iterator	rbegin() const
+		{
+			return (const_iterator(&p[_size - 1]));
+		}
+		iterator		rend(); // TODO add rend
 		const_iterator	rend() const;
 
 
 		// Capacity :
-		size_type	size() const;
+		size_type	size() const
+		{
+			return (_size);
+		}
 		size_type	max_size() const;
 		void		resize(size_type n, value_type val = value_type());
-		size_type	capacity() const;
-		bool		empty() const;
+		size_type	capacity() const
+		{
+			return (_capacity);
+		}
+		bool		empty() const
+		{
+			return (_size == 0);
+		}
 		void		reserve(size_type n);
 
 		// Element access
 		reference		operator[](size_type n);
 		const_reference operator[](size_type n) const;
-		reference		at(size_type n);
+		reference		at(size_type n)
+		{
+			// REVIEW exception?
+			return (_p[n]);
+		}
 		const_reference	at(size_type n) const;
 		reference		front();
 		const_reference	front() const;

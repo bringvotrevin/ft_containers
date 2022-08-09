@@ -8,7 +8,7 @@
 namespace ft {
 
 template <class Iterator>
-struct vector_iterator : public ft::iterator_traits<Iterator> // REVIEW	iterator<Iterator>
+class vector_iterator : public ft::iterator_traits<Iterator> // REVIEW	iterator<Iterator>
 {
 	typedef typename vector_iterator::iterator_category		iterator_category;
 	typedef typename vector_iterator::value_type			value_type;
@@ -58,7 +58,7 @@ struct iterator_traits<const T*>
 	typedef T									value_type;
 	typedef const T*							pointer;
 	typedef const T&							reference;
-}
+};
 
 
 }
