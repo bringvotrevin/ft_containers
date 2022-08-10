@@ -82,11 +82,11 @@ class  vector
 		}
 		iterator		rbegin()
 		{
-			return (iterator(&p[_size - 1]));
+			return ();
 		}
 		const_iterator	rbegin() const
 		{
-			return (const_iterator(&p[_size - 1]));
+			return ();
 		}
 		iterator		rend(); // TODO add rend
 		const_iterator	rend() const;
