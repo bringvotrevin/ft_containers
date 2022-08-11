@@ -67,7 +67,78 @@ class reverse_iterator : public ft::iterator<typename ft::iterator_traits<Iterat
 												typename ft::iterator_traits<Iterator>::pointer,
 												typename ft::iterator_traits<Iterator>::reference>
 {
-	
+	private:
+		typedef Iterator	iterator_type;
+		iterator_type		_it;
+	public:
+	// member functions
+		// constructor
+		reverse_iterator();
+		explicit reverse_iterator(iterator_type it);
+		template <class Iter>
+		reverse_iterator(const reverse_iterator<Iter>& rev_it);
+
+		iterator_type	base() const
+		{
+			return (_it);
+		}
+
+		reference			operator*() const
+		{
+			iterator_type	tmp = _it;
+			tmp--;
+			return (*tmp);
+		}
+		reverse_iterator	operator+(difference_type n) const
+		{
+			reverse_iterator	tmp(_it - n);
+			return (tmp);
+		}
+		reverse_iterator&	operator++()
+		{
+			_it--;
+			return (*this);
+		}
+		reverse_iterator	operator++(int)
+		{
+			reverse_iterator	tmp = *this;
+			++(*this);
+			return (tmp);
+		}
+		reverse_iterator&	operator+=(difference_type n)
+		{
+			*this = *this + n;
+			return (*this);
+		}
+		reverse_iterator	operator-(difference_type n) const
+		{
+			reverse_iterator	tmp(_it + n);
+			return (tmp);
+		}
+		reverse_iterator&	operator--()
+		{
+			_it++;
+			return (*this);
+		}
+		reverse_iterator	operator--(int)
+		{
+			reverse_iterator	tmp = *this;
+			--(*this);
+			return (tmp);
+		}
+		reverse_iterator&	operator-=(difference_type n)
+		{
+			*this = *this - n;
+			return (*this);
+		}
+		pointer				operator->() const // REVIEW check &&
+		{
+			return (&(operator*()));
+		}
+		reference			operator[](difference_type n) const
+		{
+			return (&(_it[-n - 1]));
+		}
 };
 
 }
