@@ -1,7 +1,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include "vector_iterator.hpp"
+#include "iterator.hpp"
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -57,7 +57,7 @@ class  vector
 		{
 
 		}
-		// destructor
+		// TODO destructor
 		~vector();
 		
 		// operator =
