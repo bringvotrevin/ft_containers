@@ -22,14 +22,13 @@ class  vector
 
 		typedef ft::vector_iterator<pointer>				iterator;
 		typedef ft::vector_iterator<const_pointer>			const_iterator;
-		typedef reverse_iterator; // TODO reverse iterator
-		typedef const_reverse_iterator; // 
+		typedef ft::reverse_iterator<iterator>				reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 		typedef typename allocator_type::difference_type	difference_type;
 		typedef typename allocator_type::size_type			size_type;
 
-		// REVIEW ask jwkim
 		allocator_type	_alloc;
-		pointer			_p; // REVIEW allocator_type::pointer인데 _p[]로 활용?
+		pointer			_p;
 		size_type		_size;
 		size_type		_capacity;
 
@@ -48,6 +47,7 @@ class  vector
 			// TODO check max size & throw
 			// TODO allocate and construct
 		}
+		// TODO
 		template <class InputIterator>
 		vector(InputIterator first, InpusIterator last, const allocator_type& = allocator_type())
 		{
@@ -82,23 +82,28 @@ class  vector
 		}
 		iterator		rbegin()
 		{
-			return ();
+			return (reverse_iterator(end());
 		}
 		const_iterator	rbegin() const
 		{
-			return ();
+			return (const_reverse_iterator(end()));
 		}
-		iterator		rend(); // TODO add rend
-		const_iterator	rend() const;
-
+		iterator		rend()
+		{
+			return (reverse_iterator(begin()));
+		}
+		const_iterator	rend() const
+		{
+			return (const_reverse_iterator(begin()));
+		}
 
 		// Capacity :
 		size_type	size() const
 		{
 			return (_size);
 		}
-		size_type	max_size() const;
-		void		resize(size_type n, value_type val = value_type());
+		size_type	max_size() const; // TODO
+		void		resize(size_type n, value_type val = value_type()); // TODO
 		size_type	capacity() const
 		{
 			return (_capacity);
@@ -107,9 +112,9 @@ class  vector
 		{
 			return (_size == 0);
 		}
-		void		reserve(size_type n);
+		void		reserve(size_type n); // TODO
 
-		// Element access
+		// Element access // TODO
 		reference		operator[](size_type n);
 		const_reference operator[](size_type n) const;
 		reference		at(size_type n)
@@ -117,7 +122,8 @@ class  vector
 			// REVIEW exception?
 			return (_p[n]);
 		}
-		const_reference	at(size_type n) const;
+		// TODO
+		const_reference	at(size_type n) const; 
 		reference		front();
 		const_reference	front() const;
 		reference		back();

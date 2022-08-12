@@ -72,7 +72,7 @@ class reverse_iterator : public ft::iterator<typename ft::iterator_traits<Iterat
 		iterator_type		_it;
 	public:
 	// member functions
-		// constructor
+		// TODO reverse_iterator constructor
 		reverse_iterator();
 		explicit reverse_iterator(iterator_type it);
 		template <class Iter>
@@ -82,7 +82,6 @@ class reverse_iterator : public ft::iterator<typename ft::iterator_traits<Iterat
 		{
 			return (_it);
 		}
-
 		reference			operator*() const
 		{
 			iterator_type	tmp = _it;
@@ -137,7 +136,7 @@ class reverse_iterator : public ft::iterator<typename ft::iterator_traits<Iterat
 		}
 		reference			operator[](difference_type n) const
 		{
-			return (&(_it[-n - 1]));
+			return (&(_it[-n - 1])); // REVIEW 맞는 코드인지 체크
 		}
 };
 
