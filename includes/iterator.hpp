@@ -15,7 +15,6 @@ class vector_iterator : public ft::iterator_traits<Iterator> // REVIEW	iterator<
 	typedef typename vector_iterator::difference_type		difference_type;
 	typedef typename vector_iterator::pointer				pointer;
 	typedef typename vector_iterator::reference				reference;
-
 };
 
 template <class Category, class T, class Distance = ptrdiff_t,
