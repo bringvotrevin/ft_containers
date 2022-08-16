@@ -82,7 +82,7 @@ class  vector
 		}
 		iterator		rbegin()
 		{
-			return (reverse_iterator(end());
+			return (reverse_iterator(end()));
 		}
 		const_iterator	rbegin() const
 		{
@@ -102,7 +102,10 @@ class  vector
 		{
 			return (_size);
 		}
-		size_type	max_size() const; // TODO
+		size_type	max_size() const // REVIEW check
+		{
+			return (std::numeric_limits<T>::max());
+		}
 		void		resize(size_type n, value_type val = value_type()); // TODO
 		size_type	capacity() const
 		{
@@ -123,11 +126,29 @@ class  vector
 			return (_p[n]);
 		}
 		// TODO
-		const_reference	at(size_type n) const; 
-		reference		front();
-		const_reference	front() const;
-		reference		back();
-		const_reference	back() const;
+		const_reference	at(size_type n) const
+		{
+			return (_p[n]);
+		} 
+		reference		front()
+		{
+			// Unlike member vector::begin, 
+			// which returns an iterator to this same element,
+			// this function returns a direct reference.
+			return (iterator(_p[0]));
+		}
+		const_reference	front() const
+		{
+			return (const_iterator(_p[0]));
+		}
+		reference		back()
+		{
+			return (_p[size]);
+		}
+		const_reference	back() const
+		{
+			return (_p[size]);
+		}
 
 		//	Modifiers
 		template <class InputIterator>
