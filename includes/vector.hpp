@@ -28,6 +28,7 @@ class  vector
 		typedef typename allocator_type::size_type			size_type;
 
 		allocator_type	_alloc;
+		// ex) std::allocator<int> _alloc;
 		pointer			_p;
 		size_type		_size;
 		size_type		_capacity;
@@ -39,7 +40,8 @@ class  vector
 		: _alloc(alloc), _p(0), _size(0), _capacity(1)
 		{
 			// TODO check max size & throw
-			_p = _alloc.allocate(capacity);
+			// 최소 capacity를 0이 아닌 1로 만들면 예외처리가 더 편함 -by jwk
+			_p = _alloc.allocate(_capacity);
 		}
 		explicit vector(size_type n, const value_type& value, const allocator_type& alloc = allocator_type())
 		: _alloc(alloc), _p(0), _size(n), _capacity() // REVIEW capacity?
@@ -106,7 +108,32 @@ class  vector
 		{
 			return (std::numeric_limits<T>::max());
 		}
-		void		resize(size_type n, value_type val = value_type()); // TODO
+		void		resize(size_type n, value_type val = value_type()) // REVIEW check
+		{
+			if (n > max_size())
+				throw (std::length_error("ERROR: in resize"));
+			if (_size > n)
+			{
+				if (_capacity > n)
+				{
+					for (size_t i = _size; i < n; i++)
+						_alloc.destroy(&_p[i]);
+					_size = n;
+				}
+				else
+				{
+					ft::vector<value_type> new_v(n, val);
+					_alloc.deallocate(begin(), end());
+					_alloc.destroy(_p);
+					*this = new_v;
+				}
+			}
+			else
+			{
+				_size = n;
+				_alloc.destory(iterator(_p[_size]), end());
+			}
+		}
 		size_type	capacity() const
 		{
 			return (_capacity);
@@ -115,7 +142,24 @@ class  vector
 		{
 			return (_size == 0);
 		}
-		void		reserve(size_type n); // TODO
+		void		reserve(size_type n) // REVIEW check
+		{
+			if (n > max_size())
+				throw (std::length_error("ERROR: in reserve"));
+			if (_capacity < n)
+			{
+				value_type new_alloc;
+				new_alloc._alloc.allocate(n);
+				for (ft::vector<new_alloc.value_type>::iterator new_it = new_alloc.begin(),
+						ft::vector<value_type>::iterator it = begin(); it != end(); new_it++, it++)
+					{
+						new_alloc._alloc.construct(new_it, *it);
+						_alloc.destroy(&(*it));
+					}
+				_alloc.deallocate(_p, _capacity);
+				*this = new_alloc;
+			}
+		}
 
 		// Element access // TODO
 		reference		operator[](size_type n);
@@ -125,7 +169,6 @@ class  vector
 			// REVIEW exception?
 			return (_p[n]);
 		}
-		// TODO
 		const_reference	at(size_type n) const
 		{
 			return (_p[n]);
@@ -135,25 +178,33 @@ class  vector
 			// Unlike member vector::begin, 
 			// which returns an iterator to this same element,
 			// this function returns a direct reference.
-			return (iterator(_p[0]));
+			return (_p[0]);
 		}
 		const_reference	front() const
 		{
-			return (const_iterator(_p[0]));
+			return (_p[0]);
 		}
 		reference		back()
 		{
-			return (_p[size]);
+			return (_p[_size - 1]);
 		}
 		const_reference	back() const
 		{
-			return (_p[size]);
+			return (_p[_size - 1]);
 		}
-
 		//	Modifiers
+		void		assign(size_type n, const value_type& val)
+		{
+			if(size < n)
+			{
+				resize()
+			}
+		}
 		template <class InputIterator>
-		void		assign(InputIterator fist, InputIterator last); //range
-		void		assign(size_type n, const value_type& val); //fill
+		void		assign(InputIterator fist, InputIterator last)
+		{
+
+		} //range
 		void		push_back(const value_type& val);
 		void		pop_back();
 		iterator	insert(iterator position, const value_type& val); //single element
