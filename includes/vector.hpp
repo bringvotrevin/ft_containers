@@ -9,7 +9,7 @@
 
 namespace ft {
 
-template <class T, class Alloc = std::allocator<T> >
+template <class T, class Alloc = std::allocator<T> > 
 class  vector
 {
 	private:
@@ -160,7 +160,6 @@ class  vector
 				*this = new_alloc;
 			}
 		}
-
 		// Element access // TODO
 		reference		operator[](size_type n);
 		const_reference operator[](size_type n) const;
@@ -172,7 +171,7 @@ class  vector
 		const_reference	at(size_type n) const
 		{
 			return (_p[n]);
-		} 
+		}
 		reference		front()
 		{
 			// Unlike member vector::begin, 
@@ -193,19 +192,41 @@ class  vector
 			return (_p[_size - 1]);
 		}
 		//	Modifiers
-		void		assign(size_type n, const value_type& val)
+		void		assign(size_type n, const value_type& val) // TODO after clear, push_back
 		{
-			if(size < n)
+			// fill : the new contents are n elements, each initialized to a copy of val.
+			if (n <= _capacity)
 			{
-				resize()
+				for (size_t i = 0; i < _size; i++)
+					_alloc.destroy(&(_p[i]));
+				for (i = 0; i < n; i++)
+					_alloc.construct(&(_p[i]), val);
+				_size = n;
+			}
+			else
+			{
+				pointer	new_p = _alloc.allocate(n);
+
+				for (int i = 0; i < n; i++)
+					new_p[i] = val;
+				pointer tmp = _p;
+				while (*tmp)
+					_alloc.destroy(tmp++);
+				_alloc.deallocate(_p, _size);
+				_p = new_p;
 			}
 		}
 		template <class InputIterator>
-		void		assign(InputIterator fist, InputIterator last)
+		void		assign(InputIterator fist, InputIterator last) // TODO after clear, push_back
 		{
-
-		} //range
-		void		push_back(const value_type& val);
+			// range : the new contents are elements constructed from each of the elements
+			//		in the range between first and last, in the same order.
+			
+		}
+		void		push_back(const value_type& val)
+		{
+			
+		}
 		void		pop_back();
 		iterator	insert(iterator position, const value_type& val); //single element
 		void		insert(iterator position, size_type n, const value_type& val); //fill
@@ -222,8 +243,6 @@ class  vector
 
 		//	Allocator
 		allocator_type	get_allocator() const;
-
-
 
 
 };
