@@ -104,7 +104,12 @@ class  vector
 		{
 			return (_size);
 		}
-		size_type	max_size() const // REVIEW check
+
+
+
+		// REVIEW check
+
+		size_type	max_size() const
 		{
 			return (std::numeric_limits<T>::max());
 		}
@@ -225,17 +230,43 @@ class  vector
 		}
 		void		push_back(const value_type& val)
 		{
-			
+			if (_capacity > _size + 1)
+			{
+				// using insert?
+			}
+			else
+			{
+				// reallocation happens
+				if (_size + 1 > max_size)
+					throw(std::length_error("Error: size in push_back"));
+			}
 		}
-		void		pop_back();
+		void		pop_back()
+		{
+			if (_size < 1)
+				return ;
+			erase(--end());
+			_size--;
+		}
 		iterator	insert(iterator position, const value_type& val); //single element
 		void		insert(iterator position, size_type n, const value_type& val); //fill
 		template <class InputIterator>
 		void		insert(iterator position, InputIterator first, InputIterator last); //range
 		iterator	erase(iterator position);
 		iterator	erase(iterator fist, iterator lase);
-		void		swap(vector& x);
-		void		clear();
+		void		swap(vector& x)
+		{
+			value_type	tmp = _p;
+
+			_p = x._p;
+			x._p = tmp;
+		}
+		void		clear()
+		{
+			for (iterator it = begin(); it != end(); it++)
+				erase(it);
+			_size = 0;
+		}
 		template <class... Args>
 		iterator	emplace(const_iterator position, Args&&... args);
 		template <class... Args>
