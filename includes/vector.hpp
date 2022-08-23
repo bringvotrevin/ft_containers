@@ -257,9 +257,20 @@ class  vector
 		void		swap(vector& x)
 		{
 			value_type	tmp = _p;
-
 			_p = x._p;
 			x._p = tmp;
+
+			size_type	tmp_size = _size;
+			_size = x._size;
+			x.size = tmp_size;
+
+			size_type tmp_capacity = _capacity;
+			_capacity = x._capacity;
+			x._capacity = tmp_capacity;
+
+			// allocator_type tmp_alloc = _alloc;
+			// _alloc = x._alloc;
+			// x.alloc = tmp_alloc;
 		}
 		void		clear()
 		{
@@ -274,8 +285,7 @@ class  vector
 
 		//	Allocator
 		allocator_type	get_allocator() const;
-
-
+		*
 };
 
 
