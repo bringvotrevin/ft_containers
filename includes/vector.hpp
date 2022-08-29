@@ -240,7 +240,7 @@ class  vector
 				if (_size + 1 > max_size)
 					throw(std::length_error("Error: size in push_back"));
 			}
-		}
+		} 
 		void		pop_back()
 		{
 			if (_size < 1)
@@ -248,10 +248,30 @@ class  vector
 			erase(--end());
 			_size--;
 		}
-		iterator	insert(iterator position, const value_type& val); //single element
-		void		insert(iterator position, size_type n, const value_type& val); //fill
+		iterator	insert(iterator position, const value_type& val) //single element
+		{
+			iterator tmp_it = position;
+			value_type tmp_val = *position;
+			while (tmp_it != end())
+			{
+				*tmp_it = val;
+				tmp_it++;
+				val = tmp_val;
+				tmp_val = *tmp_it;
+			}
+			push_back(val);
+			_size = _size + 1;
+		}
+		void		insert(iterator position, size_type n, const value_type& val) //fill
+		{
+			
+		}
 		template <class InputIterator>
-		void		insert(iterator position, InputIterator first, InputIterator last); //range
+		void		insert(iterator position, InputIterator first, InputIterator last) //range
+		{
+			while (first != last)
+				push_back(*first++);
+		}
 		iterator	erase(iterator position);
 		iterator	erase(iterator fist, iterator lase);
 		void		swap(vector& x)
@@ -278,16 +298,13 @@ class  vector
 				erase(it);
 			_size = 0;
 		}
-		template <class... Args>
-		iterator	emplace(const_iterator position, Args&&... args);
-		template <class... Args>
-		iterator	emplace_back(Args&&... args);
 
 		//	Allocator
-		allocator_type	get_allocator() const;
-		*
+		allocator_type	get_allocator() const
+		{
+			return (_alloc);
+		}
 };
-
 
 
 }
