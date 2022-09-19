@@ -113,10 +113,35 @@ class  vector
 		{
 			return (std::numeric_limits<T>::max());
 		}
+
 		void		resize(size_type n, value_type val = value_type()) // REVIEW check
 		{
-			if (n > max_size())
-				throw (std::length_error("ERROR: in resize"));
+			// 2nd try
+			size_type i;
+			if (n < _capacity)
+			{
+				if (n < _size)
+				{
+					for (i = n; n < _size; n++)
+ 	 	 				_alloc.destroy(&_p[i]);
+					_size = n;
+				}
+				else
+				{
+					for (i = _size; i < n; i++)
+						_alloc.construct(&_p[i], val);
+					_size = n;
+				}
+			}
+			else
+			{
+				// 재할당 후 채우기
+			}
+
+			// 1st try
+			// REVIEW max_size로 비교해서 error throw를 해야하는가??
+			// if (n > max_size())
+			// 	throw (std::length_error("ERROR: in resize"));
 			if (_size > n)
 			{
 				if (_capacity > n)
@@ -230,7 +255,7 @@ class  vector
 		}
 		void		push_back(const value_type& val)
 		{
-			if (_capacity > _size + 1)
+			if (_capacity >= _size + 1)
 			{
 				// using insert?
 			}
@@ -250,17 +275,20 @@ class  vector
 		}
 		iterator	insert(iterator position, const value_type& val) //single element
 		{
-			iterator tmp_it = position;
-			value_type tmp_val = *position;
-			while (tmp_it != end())
+			if (_capacity >= _size + 1)
 			{
-				*tmp_it = val;
-				tmp_it++;
-				val = tmp_val;
-				tmp_val = *tmp_it;
+				iterator	cur = position;
+				value_type	cur_val;
+				while (cur != end())
+				{
+					cur_val = *cur;
+					*cur = val;
+					cur++;
+					val = cur_val;
+				}
+				push_back(val); // 흠...
+				_size = _size + 1;
 			}
-			push_back(val);
-			_size = _size + 1;
 		}
 		void		insert(iterator position, size_type n, const value_type& val) //fill
 		{
