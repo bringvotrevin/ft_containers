@@ -44,7 +44,7 @@ class  vector
 			_p = _alloc.allocate(_capacity);
 		}
 		explicit vector(size_type n, const value_type& value, const allocator_type& alloc = allocator_type())
-		: _alloc(alloc), _p(0), _size(n), _capacity() // REVIEW capacity?
+		: _alloc(alloc), _p(0), _size(n), _capacity(n) // REVIEW capacity?
 		{
 			// TODO check max size & throw
 			// TODO allocate and construct
@@ -116,7 +116,6 @@ class  vector
 
 		void		resize(size_type n, value_type val = value_type()) // REVIEW check
 		{
-			// 2nd try
 			size_type i;
 			if (n < _capacity)
 			{
@@ -135,33 +134,10 @@ class  vector
 			}
 			else
 			{
-				// 재할당 후 채우기
-			}
-
-			// 1st try
-			// REVIEW max_size로 비교해서 error throw를 해야하는가??
-			// if (n > max_size())
-			// 	throw (std::length_error("ERROR: in resize"));
-			if (_size > n)
-			{
-				if (_capacity > n)
-				{
-					for (size_t i = _size; i < n; i++)
-						_alloc.destroy(&_p[i]);
-					_size = n;
-				}
-				else
-				{
-					ft::vector<value_type> new_v(n, val);
-					_alloc.deallocate(begin(), end());
-					_alloc.destroy(_p);
-					*this = new_v;
-				}
-			}
-			else
-			{
+				reserve(n);
+				for (i = _size; i < n; i++)
+					_alloc.construct(&_p[i], val);
 				_size = n;
-				_alloc.destory(iterator(_p[_size]), end());
 			}
 		}
 		size_type	capacity() const
@@ -178,16 +154,15 @@ class  vector
 				throw (std::length_error("ERROR: in reserve"));
 			if (_capacity < n)
 			{
-				value_type new_alloc;
-				new_alloc._alloc.allocate(n);
-				for (ft::vector<new_alloc.value_type>::iterator new_it = new_alloc.begin(),
-						ft::vector<value_type>::iterator it = begin(); it != end(); new_it++, it++)
-					{
-						new_alloc._alloc.construct(new_it, *it);
-						_alloc.destroy(&(*it));
-					}
+				pointer new_p = _alloc.allocate(n);
+				for (size_type i = 0; i < _size; i++)
+				{
+					_alloc.construct(&new_p[i], _p[i]);
+					_alloc.destroy(_p[i]);
+				}
 				_alloc.deallocate(_p, _capacity);
-				*this = new_alloc;
+				_p = new_p;
+				_capacity = n;
 			}
 		}
 		// Element access // TODO
