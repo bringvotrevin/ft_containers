@@ -20,6 +20,7 @@ class  vector
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
 
+		std::vector<int>::allocator<int>::pointer::
 		typedef ft::vector_iterator<pointer>				iterator;
 		typedef ft::vector_iterator<const_pointer>			const_iterator;
 		typedef ft::reverse_iterator<iterator>				reverse_iterator;
@@ -250,30 +251,56 @@ class  vector
 		}
 		iterator	insert(iterator position, const value_type& val) //single element
 		{
-			if (_capacity >= _size + 1)
-			{
-				iterator	cur = position;
-				value_type	cur_val;
-				while (cur != end())
-				{
-					cur_val = *cur;
-					*cur = val;
-					cur++;
-					val = cur_val;
-				}
-				push_back(val); // 흠...
-				_size = _size + 1;
-			}
+			if (_capacity < _size + 1)
+				reserve(_size * 2);
+			iterator end = end(), cur = end - 1;
+			_alloc.constuct(&end, *cur);
+			end--;
+			cur--;
+			for (; cur != position; end--, cur--)
+				*end = *cur;
+			*position = val;
+			_size += 1;
+			return (position);
 		}
 		void		insert(iterator position, size_type n, const value_type& val) //fill
 		{
-			
+			if (_capacity < _size + n)
+			{
+				if (_size * 2 < n)
+					reserve(n);
+				else
+					reserve(_size * 2);
+			}
+			iterator end = end() + (n - 1);
+			for (iterator cur = end - 1; cur != end() - 1; end--, cur--)
+			{
+				if (cur < )
+				_alloc.construct(&end, *cur);
+
+			}
+			for (; cur != position + (n - 1); end--, cur--)
+				*end = *cur;
+			_size += n;
 		}
 		template <class InputIterator>
 		void		insert(iterator position, InputIterator first, InputIterator last) //range
 		{
-			while (first != last)
-				push_back(*first++);
+			int n = 0;
+			for (InputIterator f = first; f != last; f++)
+				n++;
+			if (_capacity < _size + n)
+			{
+				if (_size * 2 < n)
+					reserve(n);
+				else
+					reserve(_size * 2);
+			}
+			// inputiterator 범위 복사
+
+			
+			// while (first != last)
+			// 	push_back(*first++);
 		}
 		iterator	erase(iterator position);
 		iterator	erase(iterator fist, iterator lase);
