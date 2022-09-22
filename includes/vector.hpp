@@ -123,13 +123,13 @@ class  vector
 				if (n < _size)
 				{
 					for (i = n; n < _size; n++)
- 	 	 				_alloc.destroy(&_p[i]);
+ 	 	 				_alloc.destroy(&(_p[i]));
 					_size = n;
 				}
 				else
 				{
 					for (i = _size; i < n; i++)
-						_alloc.construct(&_p[i], val);
+						_alloc.construct(&(_p[i]), val);
 					_size = n;
 				}
 			}
@@ -137,7 +137,7 @@ class  vector
 			{
 				reserve(n);
 				for (i = _size; i < n; i++)
-					_alloc.construct(&_p[i], val);
+					_alloc.construct(&(_p[i]), val);
 				_size = n;
 			}
 		}
@@ -158,7 +158,7 @@ class  vector
 				pointer new_p = _alloc.allocate(n);
 				for (size_type i = 0; i < _size; i++)
 				{
-					_alloc.construct(&new_p[i], _p[i]);
+					_alloc.construct(&(new_p[i]), _p[i]);
 					_alloc.destroy(_p[i]);
 				}
 				_alloc.deallocate(_p, _capacity);
@@ -231,16 +231,10 @@ class  vector
 		}
 		void		push_back(const value_type& val)
 		{
-			if (_capacity >= _size + 1)
-			{
-				// using insert?
-			}
-			else
-			{
-				// reallocation happens
-				if (_size + 1 > max_size)
-					throw(std::length_error("Error: size in push_back"));
-			}
+			if (_capacity < _size + 1)
+				reserve(size * 2);
+			_alloc.construct(end(), val);
+			_size++;
 		} 
 		void		pop_back()
 		{
@@ -286,9 +280,10 @@ class  vector
 		template <class InputIterator>
 		void		insert(iterator position, InputIterator first, InputIterator last) //range
 		{
-			int n = 0;
-			for (InputIterator f = first; f != last; f++)
-				n++;
+			// the new capacity cannot determined beforehand
+			// 1) using push_back?
+			iterator cp_pos = position;
+			iterator ori_begin = begin();
 			if (_capacity < _size + n)
 			{
 				if (_size * 2 < n)
@@ -297,16 +292,21 @@ class  vector
 					reserve(_size * 2);
 			}
 			// inputiterator 범위 복사
-
-			
-			// while (first != last)
-			// 	push_back(*first++);
+			int i = 0;
+			for (iterator it = ori_begin; it != cp_pos; it++, i++)
+				_p[i] = *it;
+			for (; first != last, i < mmmmmmmm.....; first++, i++)
+				_p[i];
+			// TODO .....dk
 		}
-		iterator	erase(iterator position);
+		iterator	erase(iterator position)
+		{
+			
+		}
 		iterator	erase(iterator fist, iterator lase);
 		void		swap(vector& x)
 		{
-			value_type	tmp = _p;
+			pointer	tmp = _p;
 			_p = x._p;
 			x._p = tmp;
 
@@ -318,9 +318,9 @@ class  vector
 			_capacity = x._capacity;
 			x._capacity = tmp_capacity;
 
-			// allocator_type tmp_alloc = _alloc;
-			// _alloc = x._alloc;
-			// x.alloc = tmp_alloc;
+			allocator_type tmp_alloc = _alloc;
+			_alloc = x.get_allocator();
+			x.alloc = tmp_alloc;
 		}
 		void		clear()
 		{
