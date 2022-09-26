@@ -227,7 +227,7 @@ class  vector
 		{
 			// range : the new contents are elements constructed from each of the elements
 			//		in the range between first and last, in the same order.
-			
+
 		}
 		void		push_back(const value_type& val)
 		{
@@ -282,28 +282,46 @@ class  vector
 		{
 			// the new capacity cannot determined beforehand
 			// 1) using push_back?
-			iterator cp_pos = position;
-			iterator ori_begin = begin();
-			if (_capacity < _size + n)
-			{
-				if (_size * 2 < n)
-					reserve(n);
-				else
-					reserve(_size * 2);
-			}
-			// inputiterator 범위 복사
-			int i = 0;
-			for (iterator it = ori_begin; it != cp_pos; it++, i++)
-				_p[i] = *it;
-			for (; first != last, i < mmmmmmmm.....; first++, i++)
-				_p[i];
+			// iterator cp_pos = position;
+			// iterator ori_begin = begin();
+			// if (_capacity < _size + n)
+			// {
+			// 	if (_size * 2 < n)
+			// 		reserve(n);
+			// 	else
+			// 		reserve(_size * 2);
+			// 	// reserve 후 기존 벡터 참조 가능??
+			// }
+			// // inputiterator 범위 복사
+			// int i = 0;
+			// for (iterator it = ori_begin; it != cp_pos; it++, i++)
+			// 	_p[i] = *it;
+			// for (; first != last, i < mmmmmmmm.....; first++, i++)
+			// 	_p[i];
 			// TODO .....dk
+
+			// 2nd try
+			if () // case of inputiterator
+			{
+				vector new_v;
+				for (iterator it = begin(); it != position; it++)
+					new_v.push_back(*it);
+				for (; first != last; first++)
+					new_v.push_back(*first);
+				for (iterator it = position; it != end(); it++)
+					new_b.push_back(*it);
+				clear();
+				_alloc.deallocate(_p, _capacity);
+				*this = new_v;
+				return ;
+			}
+			// other case
 		}
 		iterator	erase(iterator position)
 		{
 			
 		}
-		iterator	erase(iterator fist, iterator lase);
+		iterator	erase(iterator first, iterator last);
 		void		swap(vector& x)
 		{
 			pointer	tmp = _p;
