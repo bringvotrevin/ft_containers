@@ -33,8 +33,6 @@ public:
     
     
     vector& operator=(const vector& x);
-    vector& operator=(initializer_list<value_type> il);
-
 
     template <class InputIterator>
         void assign(InputIterator first, InputIterator last);

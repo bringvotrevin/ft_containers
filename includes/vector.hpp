@@ -64,7 +64,15 @@ class  vector
 		~vector();
 		
 		// operator =
-		vector&		operator=(const vector& x);
+		vector&		operator=(const vector& x)
+		{
+			if (_capacity < x._size)
+				reserve(x._size);
+			clear();
+			assign(x.begin(), x.end());
+			_size = x._size;
+			return (*this);
+		}
 
 		// Iterators:
 		iterator		begin()
@@ -304,14 +312,16 @@ class  vector
 			if () // case of inputiterator
 			{
 				vector new_v;
-				for (iterator it = begin(); it != position; it++)
+				iterator it = begin();
+				for (; it != position; it++)
 					new_v.push_back(*it);
 				for (; first != last; first++)
 					new_v.push_back(*first);
-				for (iterator it = position; it != end(); it++)
+				for (; it != end(); it++)
 					new_b.push_back(*it);
-				clear();
-				_alloc.deallocate(_p, _capacity);
+				for (int i = 0; i < _size; i++)
+					_alloc.destroy(&(_p[i]));
+				_alloc.deallocate(_p, _size);
 				*this = new_v;
 				return ;
 			}
