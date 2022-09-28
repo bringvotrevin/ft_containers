@@ -44,7 +44,7 @@ class  vector
 			// 최소 capacity를 0이 아닌 1로 만들면 예외처리가 더 편함 -by jwk
 			_p = _alloc.allocate(_capacity);
 		}
-		explicit vector(size_type n, const value_type& value, const allocator_type& alloc = allocator_type())
+		explicit vector(size_type n, const value_type& value = value_type(), const allocator_type& alloc = allocator_type())
 		: _alloc(alloc), _p(0), _size(n), _capacity(n) // REVIEW capacity?
 		{
 			// TODO check max size & throw
@@ -114,10 +114,7 @@ class  vector
 			return (_size);
 		}
 
-
-
 		// REVIEW check
-
 		size_type	max_size() const
 		{
 			return (std::numeric_limits<T>::max());
@@ -325,7 +322,30 @@ class  vector
 				*this = new_v;
 				return ;
 			}
-			// other case
+			else // other iterator
+			{
+				// get a distance of iterators
+				// make vector: size of _size + distance
+				// copy til position
+				// copy iterator
+				// copy rest of it
+
+				difference_type	dist = distance(first, last);
+				vector 			new_v(_size + dist);
+				iterator		tmp = begin();
+				int				i = 0;
+
+				for (; tmp != position; i++, tmp++)
+					new_v._alloc.construct(&(new_v._p[i]), *tmp);
+				for (; first != last; i++, first++)
+					new_v._alloc.construct(&(new_v._p[i]), *first);
+				for (; tmp != end(); i++, tmp++)
+					new_v._alloc.construct(&(new_v._p[i]), *tmp);
+				for (i = 0; i < _size; i++)
+					_alloc.destroy(&(_p[i]));
+				_alloc.deallocate(_p, _size);
+				*this = new_v;
+			}
 		}
 		iterator	erase(iterator position)
 		{
