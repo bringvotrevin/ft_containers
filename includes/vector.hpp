@@ -228,11 +228,20 @@ class  vector
 			}
 		}
 		template <class InputIterator>
-		void		assign(InputIterator fist, InputIterator last) // TODO after clear, push_back
+		void		assign(InputIterator first, InputIterator last) // TODO after clear, push_back
 		{
 			// range : the new contents are elements constructed from each of the elements
 			//		in the range between first and last, in the same order.
-
+			if () // case of inputitertaor
+			{
+				clear();
+				for (; first != last; first++)
+					push_back(*first);
+			}
+			else
+			{
+				
+			}
 		}
 		void		push_back(const value_type& val)
 		{
@@ -324,12 +333,6 @@ class  vector
 			}
 			else // other iterator
 			{
-				// get a distance of iterators
-				// make vector: size of _size + distance
-				// copy til position
-				// copy iterator
-				// copy rest of it
-
 				difference_type	dist = distance(first, last);
 				vector 			new_v(_size + dist);
 				iterator		tmp = begin();
