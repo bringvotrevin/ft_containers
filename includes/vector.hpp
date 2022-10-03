@@ -240,7 +240,35 @@ class  vector
 			}
 			else
 			{
-				
+				size_type n = std::distance(first, last);
+				if (n > _capacity)
+				{
+					size_type tmp_size = _size;
+					clear();
+					pointer tmp_p = _alloc.allocate(n);
+					for(size_type i = 0; first != last; i++, first++)
+						_alloc.construct(&(tmp_p[i]), *first);
+					_alloc.deallocate(_p, tmp_size);
+					_p = tmp_p;
+					_size = n;
+					_capacity = n;
+				}
+				else if (_size > n)
+				{
+					erase(_p[n], end());
+					for (size_type i = 0; first != last; i++, first++)
+					{
+						_alloc.destroy(_p[i]);
+						_alloc.construct(&(_p[i]), *first);
+					}
+				}
+				else
+				{
+					clear();
+					for (size_type i = 0; first != last; i++, first++)
+						_alloc.construct(&(_p[i]), *first);
+					_size = n;
+				}
 			}
 		}
 		void		push_back(const value_type& val)
@@ -352,9 +380,30 @@ class  vector
 		}
 		iterator	erase(iterator position)
 		{
-			
+			if (position != --end())
+			{
+				iterator cur = position;
+				_alloc.destroy(position++);
+				for (; position != end(); cur++, position++)
+				{
+					_alloc.construct(cur, *position);
+					_alloc.destroy(position);
+				}
+				_alloc.destroy(cur);
+				_size--;
+			}
+			else
+			{
+				_alloc.destroy(position);
+				_size--;
+			}
 		}
-		iterator	erase(iterator first, iterator last);
+		iterator	erase(iterator first, iterator last)
+		{
+			size_type n = std::distance(first, last);
+			// first시작범위부터 destroy하며 n개 뒤 원소가 할당된것일경우 복사
+
+		}
 		void		swap(vector& x)
 		{
 			pointer	tmp = _p;
