@@ -322,27 +322,6 @@ class  vector
 		template <class InputIterator>
 		void		insert(iterator position, InputIterator first, InputIterator last) //range
 		{
-			// the new capacity cannot determined beforehand
-			// 1) using push_back?
-			// iterator cp_pos = position;
-			// iterator ori_begin = begin();
-			// if (_capacity < _size + n)
-			// {
-			// 	if (_size * 2 < n)
-			// 		reserve(n);
-			// 	else
-			// 		reserve(_size * 2);
-			// 	// reserve 후 기존 벡터 참조 가능??
-			// }
-			// // inputiterator 범위 복사
-			// int i = 0;
-			// for (iterator it = ori_begin; it != cp_pos; it++, i++)
-			// 	_p[i] = *it;
-			// for (; first != last, i < mmmmmmmm.....; first++, i++)
-			// 	_p[i];
-			// TODO .....dk
-
-			// 2nd try
 			if () // case of inputiterator
 			{
 				vector new_v;
@@ -400,9 +379,34 @@ class  vector
 		}
 		iterator	erase(iterator first, iterator last)
 		{
-			size_type n = std::distance(first, last);
-			// first시작범위부터 destroy하며 n개 뒤 원소가 할당된것일경우 복사
-
+			size_type	n = std::distance(first, last);
+			iterator	start = first;
+			if (first != last)
+			{
+				if (last != end())
+				{
+					size_type cnt = 0;
+					for (size_type i = 0; i < n; i++, start++)
+					{
+						_alloc.destroy(start);
+						if (++last != end())
+						{
+							_alloc.construct(start, *last);
+							cnt++;
+						}
+					}
+					_size -= n;
+					return (first + 1 + cnt);
+				}
+				else
+				{
+					iterator start = first;
+					for (; start != last; start++)
+						_alloc.destroy(start);
+					_size -= n;
+					return (first + 1);
+				}
+			}
 		}
 		void		swap(vector& x)
 		{
