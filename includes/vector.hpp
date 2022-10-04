@@ -40,28 +40,59 @@ class  vector
 		explicit vector(const allocator_type& alloc = allocator_type())
 		: _alloc(alloc), _p(0), _size(0), _capacity(1)
 		{
-			// TODO check max size & throw
+			// REVIEW check max size & throw
+			// if (_capacity > max_size())
+			// 	throw (std::bad_alloc()); =>  과연 필요한가?
+
 			// 최소 capacity를 0이 아닌 1로 만들면 예외처리가 더 편함 -by jwk
 			_p = _alloc.allocate(_capacity);
 		}
 		explicit vector(size_type n, const value_type& value = value_type(), const allocator_type& alloc = allocator_type())
 		: _alloc(alloc), _p(0), _size(n), _capacity(n) // REVIEW capacity?
 		{
-			// TODO check max size & throw
 			// TODO allocate and construct
+			_p = _alloc.allocate(_capacity);
+			for (size_type i = n; i--;)
+				_alloc.construct(&(_p[i]), value);
 		}
 		// TODO
 		template <class InputIterator>
 		vector(InputIterator first, InpusIterator last, const allocator_type& = allocator_type())
 		{
-
+			// push_back 이용 || distance만큼 alloc 후 할당
+			if () // inputiterator case
+			{
+				_p = _alloc.allocate(1);
+				_capacity = 1;
+				for (; first != last; first++)
+					push_back(*first);
+			}
+			else
+			{
+				size_type n = std::distance(first, last);
+				_p = _alloc.allocate(n);
+				_capacity = n;
+				for (size_type i = 0; first != last; i++, first++)
+					_alloc.construct(&(_p[i]), *first);
+				_size = n;
+			}
 		}
 		vector(const vector& v)
+		: _alloc(v._alloc), _size(v._size), _capacity(v._capacity)
 		{
+			_p = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++)
+				_alloc.construct(&(_p[i]), v._p[i]);
 
 		}
-		// TODO destructor
-		~vector();
+		~vector()
+		{
+			clear();
+			_alloc.dealloc(_p, _capacity);
+			_p = NULL;
+			_size = 0;
+			_capacity = 0;
+		};
 		
 		// operator =
 		vector&		operator=(const vector& x)
@@ -223,7 +254,7 @@ class  vector
 				pointer tmp = _p;
 				while (*tmp)
 					_alloc.destroy(tmp++);
-				_alloc.deallocate(_p, _size);
+				_alloc.deallocate(_p, _capacity);
 				_p = new_p;
 			}
 		}
@@ -248,7 +279,7 @@ class  vector
 					pointer tmp_p = _alloc.allocate(n);
 					for(size_type i = 0; first != last; i++, first++)
 						_alloc.construct(&(tmp_p[i]), *first);
-					_alloc.deallocate(_p, tmp_size);
+					_alloc.deallocate(_p, _capacity);
 					_p = tmp_p;
 					_size = n;
 					_capacity = n;
@@ -334,7 +365,7 @@ class  vector
 					new_b.push_back(*it);
 				for (int i = 0; i < _size; i++)
 					_alloc.destroy(&(_p[i]));
-				_alloc.deallocate(_p, _size);
+				_alloc.deallocate(_p, _capacity);
 				*this = new_v;
 				return ;
 			}
@@ -353,7 +384,7 @@ class  vector
 					new_v._alloc.construct(&(new_v._p[i]), *tmp);
 				for (i = 0; i < _size; i++)
 					_alloc.destroy(&(_p[i]));
-				_alloc.deallocate(_p, _size);
+				_alloc.deallocate(_p, _capacity);
 				*this = new_v;
 			}
 		}
@@ -368,13 +399,14 @@ class  vector
 					_alloc.construct(cur, *position);
 					_alloc.destroy(position);
 				}
-				_alloc.destroy(cur);
 				_size--;
+				return (cur);
 			}
 			else
 			{
 				_alloc.destroy(position);
 				_size--;
+				return (position);
 			}
 		}
 		iterator	erase(iterator first, iterator last)
