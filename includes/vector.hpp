@@ -50,7 +50,6 @@ class  vector
 		explicit vector(size_type n, const value_type& value = value_type(), const allocator_type& alloc = allocator_type())
 		: _alloc(alloc), _p(0), _size(n), _capacity(n) // REVIEW capacity?
 		{
-			// TODO allocate and construct
 			_p = _alloc.allocate(_capacity);
 			for (size_type i = n; i--;)
 				_alloc.construct(&(_p[i]), value);
@@ -60,7 +59,7 @@ class  vector
 		vector(InputIterator first, InpusIterator last, const allocator_type& = allocator_type())
 		{
 			// push_back 이용 || distance만큼 alloc 후 할당
-			if () // inputiterator case
+			if () // TODO inputiterator case
 			{
 				_p = _alloc.allocate(1);
 				_capacity = 1;
@@ -154,6 +153,7 @@ class  vector
 		void		resize(size_type n, value_type val = value_type()) // REVIEW check
 		{
 			size_type i;
+
 			if (n < _capacity)
 			{
 				if (n < _size)
@@ -205,6 +205,7 @@ class  vector
 		// Element access // TODO
 		reference		operator[](size_type n);
 		const_reference operator[](size_type n) const;
+
 		reference		at(size_type n)
 		{
 			// REVIEW exception?
@@ -234,7 +235,7 @@ class  vector
 			return (_p[_size - 1]);
 		}
 		//	Modifiers
-		void		assign(size_type n, const value_type& val) // TODO after clear, push_back
+		void		assign(size_type n, const value_type& val)
 		{
 			// fill : the new contents are n elements, each initialized to a copy of val.
 			if (n <= _capacity)
@@ -263,7 +264,7 @@ class  vector
 		{
 			// range : the new contents are elements constructed from each of the elements
 			//		in the range between first and last, in the same order.
-			if () // case of inputitertaor
+			if () // TODO case of inputitertaor
 			{
 				clear();
 				for (; first != last; first++)
@@ -353,7 +354,7 @@ class  vector
 		template <class InputIterator>
 		void		insert(iterator position, InputIterator first, InputIterator last) //range
 		{
-			if () // case of inputiterator
+			if () // TODO case of inputiterator
 			{
 				vector new_v;
 				iterator it = begin();
@@ -369,7 +370,7 @@ class  vector
 				*this = new_v;
 				return ;
 			}
-			else // other iterator
+			else
 			{
 				difference_type	dist = distance(first, last);
 				vector 			new_v(_size + dist);
