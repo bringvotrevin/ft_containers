@@ -47,8 +47,9 @@ class  vector
 			// 최소 capacity를 0이 아닌 1로 만들면 예외처리가 더 편함 -by jwk
 			_p = _alloc.allocate(_capacity);
 		}
-		explicit vector(size_type n, const value_type& value = value_type(), const allocator_type& alloc = allocator_type())
-		: _alloc(alloc), _p(0), _size(n), _capacity(n) // REVIEW capacity?
+		explicit vector(size_type n, const value_type& value = value_type(), const allocator_type& alloc = allocator_type(),
+						typename = typename ft::enable_if<ft::is_integral<T>::value, T>::value::type)
+		: _alloc(alloc), _p(0), _size(n), _capacity(n)
 		{
 			_p = _alloc.allocate(_capacity);
 			for (size_type i = n; i--;)
