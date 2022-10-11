@@ -65,6 +65,7 @@
         "mutex": "cpp",
         "new": "cpp",
         "ratio": "cpp",
-        "stdexcept": "cpp"
+        "stdexcept": "cpp",
+        "__cxx_version": "cpp"
     }
 }

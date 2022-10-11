@@ -1,10 +1,17 @@
 #ifndef UTIL_HPP
 #define UTIL_HPP
 
+#include <vector>
+
+
 #include "vector.hpp"
 #include "iterator.hpp"
 
 namespace ft{
+
+	// TODO distance
+	template <class first, class last>
+	struct distance {};
 
 	template <bool Cond, class T = void>
 	struct enable_if {};

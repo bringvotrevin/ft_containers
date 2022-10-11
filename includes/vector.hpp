@@ -68,7 +68,7 @@ class  vector
 					_alloc.construct(&(_p[i]), last);
 				return ;
 			}
-			if () // TODO inputiterator case
+			if (ft::is_same<ft::iterator_traits<InputIterator>::iterator_category>::value, std::input_iterator_tag) // TODO inputiterator case
 			{
 				_p = _alloc.allocate(1);
 				_capacity = 1;
@@ -272,7 +272,7 @@ class  vector
 		{
 			// range : the new contents are elements constructed from each of the elements
 			//		in the range between first and last, in the same order.
-			if () // TODO case of inputitertaor
+			if (ft::is_same<ft::iterator_traits<InputIterator>::iterator_category>::value, std::input_iterator_tag) // TODO case of inputitertaor
 			{
 				clear();
 				for (; first != last; first++)
@@ -483,17 +483,5 @@ class  vector
 
 
 }
-
-
-
-
-
-
-// enable_if
-template <bool B, class T = void>
-struct enable_if{};
-
-template<class T>
-struct enable_if<true, T> {typedef T type;};
 
 #endif

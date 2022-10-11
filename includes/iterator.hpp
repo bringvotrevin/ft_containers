@@ -36,7 +36,6 @@ struct iterator_traits
 	typedef typename Iterator::value_type			value_type;
 	typedef typename Iterator::pointer				pointer;
 	typedef typename Iterator::reference			reference;
-
 };
 
 template <class T>
