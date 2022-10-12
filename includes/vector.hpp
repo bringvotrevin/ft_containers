@@ -20,7 +20,6 @@ class  vector
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
 
-		std::vector<int>::allocator<int>::pointer::
 		typedef ft::vector_iterator<pointer>				iterator;
 		typedef ft::vector_iterator<const_pointer>			const_iterator;
 		typedef ft::reverse_iterator<iterator>				reverse_iterator;
@@ -77,7 +76,7 @@ class  vector
 			}
 			else
 			{
-				size_type n = std::distance(first, last);
+				size_type n = ft::distance(first, last);
 				_p = _alloc.allocate(n);
 				_capacity = n;
 				for (size_type i = 0; first != last; i++, first++)
@@ -152,7 +151,7 @@ class  vector
 			return (_size);
 		}
 
-		// REVIEW check
+		// REVIEW check jw why not?
 		size_type	max_size() const
 		{
 			return (std::numeric_limits<T>::max());
@@ -210,9 +209,15 @@ class  vector
 				_capacity = n;
 			}
 		}
-		// Element access // TODO
-		reference		operator[](size_type n);
-		const_reference operator[](size_type n) const;
+
+		reference		operator[](size_type n)
+		{
+			return (_p[n]);
+		};
+		const_reference operator[](size_type n) const
+		{
+			return (_p[n]);
+		};
 
 		reference		at(size_type n)
 		{
@@ -280,7 +285,7 @@ class  vector
 			}
 			else
 			{
-				size_type n = std::distance(first, last);
+				size_type n = ft::distance(first, last);
 				if (n > _capacity)
 				{
 					size_type tmp_size = _size;
@@ -362,7 +367,7 @@ class  vector
 		template <class InputIterator>
 		void		insert(iterator position, InputIterator first, InputIterator last) //range
 		{
-			if () // TODO case of inputiterator
+			if (ft::is_same<ft::iterator_traits<InputIterator>::iterator_category>::value, std::input_iterator_tag) // TODO case of inputiterator
 			{
 				vector new_v;
 				iterator it = begin();
@@ -380,7 +385,7 @@ class  vector
 			}
 			else
 			{
-				difference_type	dist = distance(first, last);
+				difference_type	dist = ft::distance(first, last);
 				vector 			new_v(_size + dist);
 				iterator		tmp = begin();
 				int				i = 0;
@@ -420,7 +425,7 @@ class  vector
 		}
 		iterator	erase(iterator first, iterator last)
 		{
-			size_type	n = std::distance(first, last);
+			size_type	n = ft::distance(first, last);
 			iterator	start = first;
 			if (first != last)
 			{

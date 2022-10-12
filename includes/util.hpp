@@ -9,10 +9,6 @@
 
 namespace ft{
 
-	// TODO distance
-	template <class first, class last>
-	struct distance {};
-
 	template <bool Cond, class T = void>
 	struct enable_if {};
 

@@ -58,6 +58,30 @@ struct iterator_traits<const T*>
 	typedef const T&							reference;
 };
 
+template <typename RandomAccessIterator>
+typename iterator_traits<RandomAccessIterator>::difference_type
+_distance(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
+{
+	return (last - first);
+};
+
+template <typename InputIterator>
+typename iterator_traits<InputIterator>::difference_type
+_distance(InputIterator first, InputIterator last, std::input_iterator_tag)
+{
+	typename iterator_traits<InputIterator>::diffrence_type result = 0;
+	for (; first != last; first++)
+		result++;
+	return (result);
+}
+
+template <typename It>
+typename iterator_traits<It>::difference_type
+distance(It first, It last)
+{
+	return (_distance(first, last, typename iterator_traits<It>::iterator_category()));
+}
+
 template <class Iterator>
 class reverse_iterator : public ft::iterator<typename ft::iterator_traits<Iterator>::iterator_category, 
 												typename ft::iterator_traits<Iterator>::value_type,
@@ -136,7 +160,45 @@ class reverse_iterator : public ft::iterator<typename ft::iterator_traits<Iterat
 		{
 			return (&(_it_ty[-n - 1])); // REVIEW 맞는 코드인지 체크
 		}
+
 };
+
+template <class It1, class It2>
+bool operator==(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& rhs)
+{
+	return ();
+}
+
+template <class It1, class It2>
+bool operator!=(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& rhs)
+{
+
+}
+
+template <class It1, class It2>
+bool operator<(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& rhs)
+{
+
+}
+
+template <class It1, class It2>
+bool operator<=(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& rhs)
+{
+
+}
+
+template <class It1, class It2>
+bool operator>(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& rhs)
+{
+
+}
+
+template <class It1, class It2>
+bool operator>=(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& rhs)
+{
+
+}
+
 
 }
 
