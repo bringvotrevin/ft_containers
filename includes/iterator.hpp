@@ -24,6 +24,23 @@ public:
 	// TODO constructor and destructor
 	vector_iterator() {}
 	vector_iterator(other) {}
+
+	// REVIEW lvalue도 될 수 있게 reference 반환
+	reference	operator*() const
+	{
+		return (*_base);
+	}
+
+	pointer		operator->() const
+	{
+		return (&(*_base));
+	}
+
+	const Iterator &base() const
+	{
+		return (_base);
+	}
+
 	vector_iterator& operator=(const vector_iterator& other) 
 	{
 		_base = other._base;
@@ -66,18 +83,85 @@ public:
 		return (_base[n]);
 	}
 
-	const Iterator &base() const
+	vector_iterator&	operator++()
 	{
-		return (_base);
+		_base++;
+		return (*this);
 	}
-	// TODO < > >= <=
 
+	vector_iterator		operator++(int)
+	{
+		vector_iterator tmp = *this;
+		*this++;
+		return (tmp);
+	}
 
+	vector_iterator&	operator--()
+	{
+		_base--;
+		return (*this);
+	}
 
+	vector_iterator		operator--(int)
+	{
+		vector_iterator tmp = *this;
+		*this--;
+		return (tmp);
+	}
 
-
+	template <class It1, class It2>
+	friend bool operator==(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs);
+	template <class It1, class It2>
+	friend bool operator!=(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs);
+	template <class It1, class It2>
+	friend bool operator<(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs);
+	template <class It1, class It2>
+	friend bool operator<=(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs);
+	template <class It1, class It2>
+	friend bool operator>(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs);
+	template <class It1, class It2>
+	friend bool operator>=(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs);
+	// TODO * -> ++ ++ -- -- 
 
 };
+
+template <class It1, class It2>
+bool operator==(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs)
+{
+	return (lhs._base == rhs._base);
+}
+
+template <class It1, class It2>
+bool operator!=(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs)
+{
+	return (lhs._base != rhs._base);
+}
+
+template <class It1, class It2>
+bool operator<(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs)
+{
+	return (lhs._base > rhs._base);
+}
+
+template <class It1, class It2>
+bool operator<=(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs)
+{
+	return (lhs._base <= rhs._base);
+}
+
+template <class It1, class It2>
+bool operator>(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs)
+{
+	return (lhs._base > rhs._base);
+}
+
+template <class It1, class It2>
+bool operator>=(const vector_iterator<It1>& lhs, const vector_iterator<It2>& rhs)
+{
+	return (lhs._base >= rhs._base);
+}
+
+
 
 template <class Category, class T, class Distance = ptrdiff_t,
 			class Pointer = T*, class Reference = T&>
@@ -240,25 +324,25 @@ bool operator!=(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& r
 template <class It1, class It2>
 bool operator<(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& rhs)
 {
-	return (lhs._base < rhs._base);
+	return (lhs._base > rhs._base);
 }
 
 template <class It1, class It2>
 bool operator<=(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& rhs)
 {
-	return (lhs._base <= rhs._base);
+	return (lhs._base >= rhs._base);
 }
 
 template <class It1, class It2>
 bool operator>(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& rhs)
 {
-	return (lhs._base > rhs._base);
+	return (lhs._base < rhs._base);
 }
 
 template <class It1, class It2>
 bool operator>=(const reverse_iterator<It1>& lhs, const reverse_iterator<It2>& rhs)
 {
-	return (lhs._base >= rhs._base);
+	return (lhs._base <= rhs._base);
 }
 
 
