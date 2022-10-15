@@ -2,6 +2,7 @@
 #define VECTOR_HPP
 
 #include "iterator.hpp"
+#include "util.hpp"
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -18,9 +19,11 @@ class  vector
 		typedef typename allocator_type::reference			reference;
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer			pointer;
+		// ex) std::allocator<int>::pointer
 		typedef typename allocator_type::const_pointer		const_pointer;
 
 		typedef ft::vector_iterator<pointer>				iterator;
+		// ex) vector_iterator<std::allocator<int>::pointer>
 		typedef ft::vector_iterator<const_pointer>			const_iterator;
 		typedef ft::reverse_iterator<iterator>				reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
@@ -50,24 +53,24 @@ class  vector
 		: _alloc(alloc), _p(0), _size(n), _capacity(n)
 		{
 			_p = _alloc.allocate(_capacity);
-			for (size_type i = n; i--;)
+			for (size_type i = n; i > 0; i--)
 				_alloc.construct(&(_p[i]), value);
 		}
 		// TODO
 		template <class InputIterator>
 		vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
 		{
-			if (typename ft::is_integral<_InputIterator>::value)
+			if (ft::is_integral<InputIterator>::value)
 			{
 				_alloc = alloc;
 				_size = first;
 				_capacity = first;
 				_p = _alloc.allocate(_capacity);
-				for (size_type i = n; i--;)
+				for (size_type i = first; i > 0 ; i--)
 					_alloc.construct(&(_p[i]), last);
 				return ;
 			}
-			if (ft::is_same<ft::iterator_traits<InputIterator>::iterator_category>::value, std::input_iterator_tag) // TODO inputiterator case
+			if (ft::is_same<typename ft::iterator_traits<InputIterator>::iterator_category, std::input_iterator_tag>::value) // TODO inputiterator case
 			{
 				_p = _alloc.allocate(1);
 				_capacity = 1;
@@ -94,7 +97,7 @@ class  vector
 		~vector()
 		{
 			clear();
-			_alloc.dealloc(_p, _capacity);
+			_alloc.deallocate(_p, _capacity);
 			_p = NULL;
 			_size = 0;
 			_capacity = 0;
@@ -151,7 +154,7 @@ class  vector
 			return (_size);
 		}
 
-		// REVIEW check jw why not?
+		// REVIEW check jw's [why not?]
 		size_type	max_size() const
 		{
 			return (std::numeric_limits<T>::max());
@@ -255,7 +258,7 @@ class  vector
 			{
 				for (size_t i = 0; i < _size; i++)
 					_alloc.destroy(&(_p[i]));
-				for (i = 0; i < n; i++)
+				for (size_t i = 0; i < n; i++)
 					_alloc.construct(&(_p[i]), val);
 				_size = n;
 			}
@@ -277,7 +280,7 @@ class  vector
 		{
 			// range : the new contents are elements constructed from each of the elements
 			//		in the range between first and last, in the same order.
-			if (ft::is_same<ft::iterator_traits<InputIterator>::iterator_category>::value, std::input_iterator_tag) // TODO case of inputitertaor
+			if (ft::is_same<typename ft::iterator_traits<InputIterator>::iterator_category, std::input_iterator_tag>::value) // TODO case of inputitertaor
 			{
 				clear();
 				for (; first != last; first++)
@@ -319,7 +322,7 @@ class  vector
 		void		push_back(const value_type& val)
 		{
 			if (_capacity < _size + 1)
-				reserve(size * 2);
+				reserve(_size * 2);
 			_alloc.construct(end(), val);
 			_size++;
 		} 
@@ -332,20 +335,22 @@ class  vector
 		}
 		iterator	insert(iterator position, const value_type& val) //single element
 		{
+			size_type pos = end() - position;
 			if (_capacity < _size + 1)
 				reserve(_size * 2);
 			iterator end = end(), cur = end - 1;
 			_alloc.constuct(&end, *cur);
 			end--;
 			cur--;
-			for (; cur != position; end--, cur--)
+			for (--pos; pos > 0; end--, cur--, pos--)
 				*end = *cur;
-			*position = val;
+			*end = val;
 			_size += 1;
-			return (position);
+			return (end);
 		}
 		void		insert(iterator position, size_type n, const value_type& val) //fill
 		{
+			size_type pos = end() - position;
 			if (_capacity < _size + n)
 			{
 				if (_size * 2 < n)
@@ -353,21 +358,32 @@ class  vector
 				else
 					reserve(_size * 2);
 			}
-			iterator end = end() + (n - 1);
-			for (iterator cur = end - 1; cur != end() - 1; end--, cur--)
+			iterator re_end = end() - 1;
+			iterator copy_end = re_end - n;
+			size_type new_alloc = n, num = n;
+			for (; pos > 0; pos--, re_end--, copy_end--)
 			{
-				if (cur < )
-				_alloc.construct(&end, *cur);
-
+				if (new_alloc > 0)
+				{
+					_alloc.construct(&re_end, *copy_end);
+					new_alloc--;
+				}
+				else
+				{
+					*re_end = *copy_end;
+					n--;
+				}
 			}
-			for (; cur != position + (n - 1); end--, cur--)
-				*end = *cur;
+			for (; new_alloc > 0; re_end--, new_alloc--, num--)
+				_alloc.construct(&re_end--, val);
+			for (; num > 0; num--)
+				*re_end = val;
 			_size += n;
 		}
 		template <class InputIterator>
 		void		insert(iterator position, InputIterator first, InputIterator last) //range
 		{
-			if (ft::is_same<ft::iterator_traits<InputIterator>::iterator_category>::value, std::input_iterator_tag) // TODO case of inputiterator
+			if (ft::is_same<typename ft::iterator_traits<InputIterator>::iterator_category, std::input_iterator_tag>::value) // TODO case of inputiterator
 			{
 				vector new_v;
 				iterator it = begin();
@@ -376,7 +392,7 @@ class  vector
 				for (; first != last; first++)
 					new_v.push_back(*first);
 				for (; it != end(); it++)
-					new_b.push_back(*it);
+					new_v.push_back(*it);
 				for (int i = 0; i < _size; i++)
 					_alloc.destroy(&(_p[i]));
 				_alloc.deallocate(_p, _capacity);

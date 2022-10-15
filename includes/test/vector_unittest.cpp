@@ -6,7 +6,7 @@
 #include "gtest/gtest.h"
 
 // namespace ft = std;
-// #include "../vector.hpp"
+#include "../vector.hpp"
 
 TEST(VectorConstructor, default_constructor) {
   std::vector<int> vi_1;
