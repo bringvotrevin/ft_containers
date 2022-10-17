@@ -18,8 +18,8 @@ namespace ft{
 		typedef T type;
 	};
 
-	template <class T, T v>
-	struct integral_constant
+	template <class T, T v> // 11문법이라 is_integral 다 바꿔야됨 정우꺼처럼 바꿔야함
+	struct integral_constant 
 	{
 		static const T value = v;
 		typedef T value_type;

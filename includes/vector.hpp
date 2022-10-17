@@ -14,8 +14,9 @@ template <class T, class Alloc = std::allocator<T> >
 class  vector
 {
 	private:
+		typedef Alloc										 allocator_type;
+	public:
 		typedef T											value_type;
-		typedef Alloc										allocator_type;
 		typedef typename allocator_type::reference			reference;
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer			pointer;
@@ -29,7 +30,7 @@ class  vector
 		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 		typedef typename allocator_type::difference_type	difference_type;
 		typedef typename allocator_type::size_type			size_type;
-
+	private:
 		allocator_type	_alloc;
 		// ex) std::allocator<int> _alloc;
 		pointer			_p;
@@ -58,18 +59,19 @@ class  vector
 		}
 		// TODO
 		template <class InputIterator>
-		vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+		vector(typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type first, InputIterator last, const allocator_type& alloc = allocator_type())
+		: _alloc(alloc), _p(0), _size(0), _capacity(0)
 		{
-			if (ft::is_integral<InputIterator>::value)
-			{
-				_alloc = alloc;
-				_size = first;
-				_capacity = first;
-				_p = _alloc.allocate(_capacity);
-				for (size_type i = first; i > 0 ; i--)
-					_alloc.construct(&(_p[i]), last);
-				return ;
-			}
+			// if (ft::is_integral<InputIterator>::value) // 위에서 걸러주고 지우기
+			// {
+			// 	_alloc = alloc;
+			// 	_size = first;
+			// 	_capacity = first;
+			// 	_p = _alloc.allocate(_capacity);
+			// 	for (size_type i = first; i > 0 ; i--)
+			// 		_alloc.construct(&(_p[i]), last);
+			// 	return;
+			// }
 			if (ft::is_same<typename ft::iterator_traits<InputIterator>::iterator_category, std::input_iterator_tag>::value) // TODO inputiterator case
 			{
 				_p = _alloc.allocate(1);
@@ -205,7 +207,7 @@ class  vector
 				for (size_type i = 0; i < _size; i++)
 				{
 					_alloc.construct(&(new_p[i]), _p[i]);
-					_alloc.destroy(_p[i]);
+					_alloc.destroy(&(_p[i]));
 				}
 				_alloc.deallocate(_p, _capacity);
 				_p = new_p;
@@ -276,7 +278,7 @@ class  vector
 			}
 		}
 		template <class InputIterator>
-		void		assign(InputIterator first, InputIterator last) // TODO after clear, push_back
+		void		assign(typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) // TODO after clear, push_back
 		{
 			// range : the new contents are elements constructed from each of the elements
 			//		in the range between first and last, in the same order.
@@ -381,7 +383,7 @@ class  vector
 			_size += n;
 		}
 		template <class InputIterator>
-		void		insert(iterator position, InputIterator first, InputIterator last) //range
+		void		insert(iterator position, typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) //range
 		{
 			if (ft::is_same<typename ft::iterator_traits<InputIterator>::iterator_category, std::input_iterator_tag>::value) // TODO case of inputiterator
 			{
@@ -420,24 +422,14 @@ class  vector
 		}
 		iterator	erase(iterator position)
 		{
-			if (position != --end())
+			if (position + 1 != end())
 			{
-				iterator cur = position;
-				_alloc.destroy(position++);
-				for (; position != end(); cur++, position++)
-				{
-					_alloc.construct(cur, *position);
-					_alloc.destroy(position);
-				}
-				_size--;
-				return (cur);
+				for (iterator pos = position, cur = position + 1; cur != end(); cur++, position++)
+					*pos = *cur;
 			}
-			else
-			{
-				_alloc.destroy(position);
-				_size--;
-				return (position);
-			}
+			_alloc.destroy(end() - 1);
+			_size--;
+			return (position);
 		}
 		iterator	erase(iterator first, iterator last)
 		{

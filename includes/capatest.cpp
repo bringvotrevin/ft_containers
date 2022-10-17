@@ -16,9 +16,9 @@ int	main()
 	cout << "new size : " << v.size() << endl;
 
 	ft::vector<int> v2(5, 1);
-	v2.insert(2, 9);
+	v2.insert(v2.begin(), 9);
 	cout << "vector contatins : ";
-	for (vector<int>::iterator bg = v2.begin(), ed = v2.end(); bg != ed; bg++)
+	for (ft::vector<int>::iterator bg = v2.begin(), ed = v2.end(); bg != ed; bg++)
 		cout << *bg << " ";
 	return 0;
 }

@@ -4,12 +4,12 @@
 #include <iostream>
 #include <iterator>
 #include <cstddef> // ptrdiff_t?
+#include "util.hpp"
 
 namespace ft {
 
 
-template <class Category, class T, class Distance = ptrdiff_t,
-			class Pointer = T*, class Reference = T&>
+template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
 struct iterator
 {
 	typedef Category		iterator_category;
@@ -54,9 +54,7 @@ class vector_iterator : public ft::iterator_traits<Iterator> // REVIEW iterator<
 {
 	private:
 		Iterator _base;
-
 	public: 
-
 		typedef typename vector_iterator::iterator_category		iterator_category;
 		typedef typename vector_iterator::value_type			value_type;
 		typedef typename vector_iterator::difference_type		difference_type;
@@ -64,8 +62,11 @@ class vector_iterator : public ft::iterator_traits<Iterator> // REVIEW iterator<
 		typedef typename vector_iterator::reference				reference;
 
 		// TODO constructor and destructor
-		vector_iterator() {}
+		vector_iterator() : _base(Iterator()) {}
 		explicit vector_iterator(const Iterator& other) : _base(other) {}
+		template <typename o_Iterator>
+		vector_iterator(const vector_iterator<o_Iterator> other, typename ft::enable_if<ft::is_same<o_Iterator, Iterator>::vaue>* = 0)
+		: _base(other._base) {}
 
 
 		const Iterator&		base() const
